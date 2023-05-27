@@ -7,11 +7,11 @@ export class newsItem extends Component {
       <div>
         <div className="card">
            {/* badge */}
-            <span class="position-absolute top-0 translate-middle badge rounded-pill bg-danger" style={{zIndex:"1", left:"80%"}}>
+            <span className="position-absolute top-0 translate-middle badge rounded-pill bg-danger" style={{zIndex:"1", left:"80%"}}>
               {source}
               {/* the property z-index will allow the badge to display its content above the next card element and left property will allow the badge to shift to left to certain given percentage. */}
 
-              <span class="visually-hidden">unread messages</span>
+              <span className="visually-hidden">unread messages</span>
             </span>
           
           <img src={imageUrl} className="card-img-top" alt="..." />

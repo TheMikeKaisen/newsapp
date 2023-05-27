@@ -11,13 +11,14 @@ export class news extends Component {
     pagesize: 4
   }
   static propTypes ={
+    
     country: PropTypes.string,
     category: PropTypes.string,
     pagesize: PropTypes.number,
     author: PropTypes.string
   }
   
-  constructor(){
+  constructor(props){
     super();
     console.log("constructor from the news component.")
     this.state ={
@@ -25,9 +26,10 @@ export class news extends Component {
       article: [],
       loading: false
     }
+    document.title = `${props.category} - NewsMonkey`
 }
-  async componentDidMount(){
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=8aa69dd64d4e4cc780b05d76315db500&page=1&pagesize=${this.props.pagesize}`;
+  updateNews= async() => {
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=8aa69dd64d4e4cc780b05d76315db500&page=${this.state.page}}&pagesize=${this.props.pagesize}`;
     //pagesize property allows you to handle the number of articles you want to show in a page
     this.setState({loading: true})
     let data = await fetch(url);
@@ -38,41 +40,28 @@ export class news extends Component {
       totalResults: parsedData.totalResults,
       loading: false
     })
+  }
+  async componentDidMount(){
+    this.updateNews();
 
   }
-  handlePrevClick= async()=>{
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=8aa69dd64d4e4cc780b05d76315db500&page=${this.state.page - 1}&pagesize=${this.props.pagesize}`;
-
-    this.setState({loading: true})
-    // while the page is loading, it will show a spinner gif otherwise not
-
-    let data = await fetch(url);
-    let parsedData = await data.json();
-    this.setState({
-      article: parsedData.articles,
-      // when we click the previous button page number will decrease to 1 so that when it reaches page 1, it gets disabled
-      page: this.state.page - 1,
-      loading: false //after the page have been loaded successfully, we set loading to true and gif will disappear
-    })
-  }
-  handleNextClick=async()=>{
-      let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=8aa69dd64d4e4cc780b05d76315db500&page=${this.state.page+1}&pagesize=${this.props.pagesize}`;
-      this.setState({loading: true})
-      let data = await fetch(url);
-      let parsedData = await data.json();
-      this.setState({
-        page: this.state.page+1,
-        article: parsedData.articles,
-        loading: false,
-        
-      })
-    }
+  handlePrevClick = () => {
+    this.setState({ page: this.state.page - 1 }, () => {
+      this.updateNews();
+    });
+  };
+  
+  handleNextClick = () => {
+    this.setState({ page: this.state.page + 1 }, () => {
+      this.updateNews();
+    });
+  };
     
 
   render() {
     return (
       <div className="container my-4">
-        <h2 className = "text-center">NewsMonkey - Top Headlines.</h2>
+        <h2 className = "text-center">NewsMonkey - Top {this.props.category} Headlines.</h2>
 
         {this.state.loading &&<Spinner/>} 
         {/* this code will run only if both the conditions are true. */}
