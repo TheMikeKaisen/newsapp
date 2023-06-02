@@ -7,7 +7,7 @@ export class Spinner extends Component {
     return (
       <div className="text-center"> 
       {/* the class text-center belongs to bootstrap and it centers the element in a line. */}
-        <img src={loading}alt="loading" />
+        <img className="my-4" src={loading}alt="loading" />
       </div>
     )
   }
