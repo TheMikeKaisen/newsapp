@@ -4,6 +4,7 @@ import { Spinner } from './Spinner';
 import PropTypes from 'prop-types'
 import InfiniteScroll from "react-infinite-scroll-component";
 
+
 export class news extends Component {
   static defaultProps = {
     country: "us",
@@ -30,11 +31,16 @@ export class news extends Component {
     document.title = `${props.category} - NewsMonkey`
   }
   updateNews = async () => {
+    this.props.setProgress(10)
     let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=8aa69dd64d4e4cc780b05d76315db500&page=${this.state.page}&pagesize=${this.props.pagesize}`;
     //pagesize property allows you to handle the number of articles you want to show in a page
     this.setState({ loading: true })
     let data = await fetch(url);
+    this.props.setProgress(50)
+
     let parsedData = await data.json();
+    this.props.setProgress(70)
+
     this.setState({
       article: this.state.article.concat(parsedData.articles),      
       //this will concatinate the contents of next page under the articles as we scroll
@@ -43,6 +49,7 @@ export class news extends Component {
       totalResults: parsedData.totalResults,
       loading: false
     })
+    this.props.setProgress(100);
   }
   async componentDidMount() {
     this.updateNews();
@@ -72,6 +79,7 @@ export class news extends Component {
         {/* this code will run only if both the conditions are true. */}
 
         {/* Adding an infinite scroll */}
+        <div className="container">
         <InfiniteScroll
           dataLength={this.state.article.length}
           next={this.fetchMoreData}
@@ -79,17 +87,17 @@ export class news extends Component {
           // it will scroll untill the length of article becomes equal to the length of totalResults
           loader={<Spinner/>}
         >
-          <div className="container">
           <div className="row my-4">
-            {this.state.article.map((element) => {
-              return <div className="col-md-3 my-3" key={element.url}>
+            {this.state.article.map((element, index) => {
+              // here i have included an index as a parameter because i was having an error of having two children with the same api in the console. By making index of list as a 'key', problem was resolved.
+              return <div className="col-md-3 my-3" key={index}>
                 <NewsItem title={element.title ? element.title.slice(0, 45) : ""} description={element.description ? element.description.slice(0, 88) : ""} imageUrl={element.urlToImage ? element.urlToImage : "https://i.ytimg.com/vi/FMYu5ZSSAbE/hqdefault.jpg"} newsUrl={element.url} date={element.publishedAt} author={element.author} source={element.source.name} />
               </div>
 
             })}
           </div>
-          </div>
         </InfiniteScroll>
+        </div>
 
         
 
