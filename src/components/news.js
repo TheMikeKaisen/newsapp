@@ -42,9 +42,9 @@ export class news extends Component {
     this.props.setProgress(70)
 
     this.setState({
-      article: this.state.article.concat(parsedData.articles),      
+      article: this.state.article.concat(parsedData.articles),
       //this will concatinate the contents of next page under the articles as we scroll
-      
+
       //total results is the total number of articels in the page.
       totalResults: parsedData.totalResults,
       loading: false
@@ -55,21 +55,34 @@ export class news extends Component {
     this.updateNews();
 
   }
+  // fetchMoreData = async () => {
+  //   this.setState({page: this.state.page+1})
+  //   this.updateNews();
+  //   // let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=8aa69dd64d4e4cc780b05d76315db500&page=${this.state.page}&pagesize=${this.props.pagesize}`;
+  //   // //pagesize property allows you to handle the number of articles you want to show in a page
+  //   // this.setState({ loading: true })
+  //   // let data = await fetch(url);
+  //   // let parsedData = await data.json();
+  //   // this.setState({
+  //   //   article: this.state.article.concat(parsedData.articles),
+  //   //   //total results is the total number of articels in the page.
+  //   //   totalResults: parsedData.totalResults,
+  //   //   loading: false
+  //   // });
+  // }
   fetchMoreData = async () => {
-    this.setState({page: this.state.page+1})
-    this.updateNews();
-    // let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=8aa69dd64d4e4cc780b05d76315db500&page=${this.state.page}&pagesize=${this.props.pagesize}`;
-    // //pagesize property allows you to handle the number of articles you want to show in a page
-    // this.setState({ loading: true })
-    // let data = await fetch(url);
-    // let parsedData = await data.json();
-    // this.setState({
-    //   article: this.state.article.concat(parsedData.articles),
-    //   //total results is the total number of articels in the page.
-    //   totalResults: parsedData.totalResults,
-    //   loading: false
-    // });
+    if (this.state.article.length >= this.state.totalResults) {
+      // If all articles have been loaded, return early
+      return;
+    }
+
+    this.setState((prevState) => ({
+      page: prevState.page + 1,
+    }), () => {
+      this.updateNews();
+    });
   }
+
   render() {
     return (
       <div className="container my-4">
@@ -80,13 +93,15 @@ export class news extends Component {
 
         {/* Adding an infinite scroll */}
         <div className="container">
-        <InfiniteScroll
-          dataLength={this.state.article.length}
-          next={this.fetchMoreData}
-          hasMore={this.state.article.length !== this.state.totalResults}
-          // it will scroll untill the length of article becomes equal to the length of totalResults
-          loader={<Spinner/>}
-        >
+          <InfiniteScroll
+            dataLength={this.state.article.length}
+            next={this.fetchMoreData}
+            hasMore={this.state.article.length < this.state.totalResults}
+            scrollThreshold={0.9} // Adjust this value as needed
+            loader={<Spinner />}
+          >
+          
+
           <div className="row my-4">
             {this.state.article.map((element, index) => {
               // here i have included an index as a parameter because i was having an error of having two children with the same api in the console. By making index of list as a 'key', problem was resolved.
@@ -97,12 +112,12 @@ export class news extends Component {
             })}
           </div>
         </InfiniteScroll>
-        </div>
+      </div>
 
         
 
 
-      </div>
+      </div >
 
 
     )
