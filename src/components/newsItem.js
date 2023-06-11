@@ -1,34 +1,30 @@
-import React, { Component } from 'react'
+import React from 'react'
 
-export class newsItem extends Component {
-  render() {
-    let { title, description, imageUrl, newsUrl, date, author , source} = this.props;
-    return (
-      <div>
-        <div className="card">
-           {/* badge */}
-            <span className="position-absolute top-0 translate-middle badge rounded-pill bg-danger" style={{zIndex:"1", left:"80%"}}>
-              {source}
-              {/* the property z-index will allow the badge to display its content above the next card element and left property will allow the badge to shift to left to certain given percentage. */}
-
-              <span className="visually-hidden">unread messages</span>
-            </span>
-          
-          <img src={imageUrl} className="card-img-top" alt="..." />
-          <div className="card-body">
-            <h5 className="card-title">{title}...</h5>
-            <p className="card-text">{description}...</p>
-            <p className="card-text"><small className="text-body-secondary">By {author ? author : "unknown"} , on {date ? new Date(date).toGMTString() : "unknown date"}</small></p>
-            {/* we have added dates and names of the author to the ends of the cards, and for the date to be displayed in 
-            GMT format, we use toGMTString method.  */}
-            <a target="-blank" href={newsUrl} className="btn btn-sm  btn-dark">Read More</a>
-
-          </div>
-        </div>
-
-      </div>
-    )
-  }
+const newsItem = (props)=> {
+        let { title, description, imageUrl, newsUrl, author, date, source } = props;
+        return (
+            <div className="my-3">
+                <div className="card">
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        position: 'absolute',
+                        right: '0'
+                    }
+                    }> 
+                        <span className="badge rounded-pill bg-danger"> {source} </span>
+                    </div>
+                    <img src={!imageUrl ? "https://fdn.gsmarena.com/imgroot/news/21/08/xiaomi-smart-home-india-annoucnements/-476x249w4/gsmarena_00.jpg" : imageUrl} className="card-img-top" alt="..." />
+                    <div className="card-body">
+                        <h5 className="card-title">{title}  </h5>
+                        <p className="card-text">{description}</p>
+                        <p className="card-text"><small className="text-muted">By {!author ? "Unknown" : author} on  {new Date(date).toGMTString()}</small></p>
+                        <a rel="noreferrer" href={newsUrl} target="_blank" className="btn btn-sm btn-dark">Read More</a>
+                    </div>
+                </div>
+            </div>
+        )
+     
 }
 
 export default newsItem

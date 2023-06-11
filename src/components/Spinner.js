@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React from 'react'
 import loading from "./Snake.gif"
 // here, we have downloaded a spinner gif from the net to use it while page is loading.
 
-export class Spinner extends Component {
-  render() {
+const Spinner = () => {
+  
     return (
       <div className="text-center"> 
       {/* the class text-center belongs to bootstrap and it centers the element in a line. */}
@@ -11,6 +11,6 @@ export class Spinner extends Component {
       </div>
     )
   }
-}
 
-export default loading
+
+export default Spinner
